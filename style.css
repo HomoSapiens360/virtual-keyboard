@@ -1,5 +1,19 @@
 html * {
   box-sizing: border-box;
+  margin: 0;
+}
+
+.header__title {
+  text-align: center;
+  margin: 0 0 20px 0;
+  ;
+}
+
+.body {
+  height: 100vh;
+  margin: 0;
+  padding: 20px 0;
+  font-family: arial, serif;
 }
 
 .main__wrap {
@@ -14,6 +28,8 @@ html * {
 
 .text-area {
   width: 100%;
+  height: 300px;
+  font-size: 25px;
 }
 
 .btn {
@@ -65,4 +81,15 @@ html * {
   display: flex;
   column-gap: 13px;
 
+}
+
+.footer {
+  width: 1000px;
+
+}
+
+.footer__par {
+  font-size: 26px;
+  text-align: center;
+  margin: 20px 0 0 0;
 }

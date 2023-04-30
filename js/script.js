@@ -1,3 +1,5 @@
+import Key from './key.js';
+
 const body = document.querySelector('body');
 const header = document.createElement('header');
 const mainWrap = document.createElement('div');
@@ -8,6 +10,8 @@ const footer = document.createElement('footer');
 const footerPar = document.createElement('p');
 const keyboardWrap = document.createElement('div');
 const keyboard = {};
+let acc;
+let isFocused = false;
 
 const EN_FIRST_ROW = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'];
 const RU_FIRST_ROW = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'];
@@ -23,9 +27,11 @@ const enKeyRows = {
   fifthRow: EN_FIFTH_ROW,
 };
 
+body.className = 'body';
+
 header.className = 'header';
 headerTitle.className = 'header__title';
-headerTitle.textContent = 'Virtyal keyboard';
+headerTitle.textContent = 'Virtual keyboard';
 header.appendChild(headerTitle);
 
 main.className = 'main';
@@ -36,84 +42,45 @@ mainWrap.appendChild(textArea);
 mainWrap.appendChild(keyboardWrap);
 
 textArea.className = 'text-area';
-textArea.cols = 20;
-textArea.rows = 20;
 
 keyboardWrap.className = 'main__keyboard-wrap';
 
+footerPar.className = 'footer__par';
+footerPar.textContent = 'The keyboard is made in the Windows operating system';
+footer.appendChild(footerPar);
+
 body.appendChild(header);
 body.appendChild(main);
+body.appendChild(footer);
 
-class Key {
-  constructor(enLit, ruLit, btn) {
-    this.btn = btn;
-    this.enLit = enLit;
-    this.ruLit = ruLit;
+function changeTextArea(key = '') {
+  textArea.focus();
+  if (key === 'ArrowLeft') {
+    if (acc === undefined) {
+      acc = 1;
+    }
+    const position = textArea.value.length - acc;
+    textArea.setSelectionRange(position, position);
+    acc += 1;
+    if (acc === textArea.value.length) {
+      acc = textArea.value.length - 1;
+    }
+    return;
   }
-
-  setTextToButton() {
-    this.btn.textContent = this.enLit;
-    if (this.enLit === 'ArrowUp') {
-      this.btn.textContent = '↑';
+  if (key === 'ArrowRight') {
+    if (acc === undefined) {
+      acc = 1;
     }
-    if (this.enLit === 'ArrowLeft') {
-      this.btn.textContent = '←';
+    const position = textArea.value.length - acc;
+    textArea.setSelectionRange(position + 1, position + 1);
+    acc -= 1;
+    if (acc === 0) {
+      acc = 1;
     }
-    if (this.enLit === 'ArrowDown') {
-      this.btn.textContent = '↓';
-    }
-    if (this.enLit === 'ArrowRight') {
-      this.btn.textContent = '→';
-    }
-    if (this.enLit === 'ShiftLeft') {
-      this.btn.textContent = 'Shift';
-    }
-    if (this.enLit === 'ShiftRight') {
-      this.btn.textContent = 'Shift';
-    }
-    if (this.enLit === 'ControlLeft') {
-      this.btn.textContent = 'Ctrl';
-    }
-    if (this.enLit === 'ControlRight') {
-      this.btn.textContent = 'Ctrl';
-    }
-    if (this.enLit === 'AltLeft') {
-      this.btn.textContent = 'Alt';
-    }
-    if (this.enLit === 'AltRight') {
-      this.btn.textContent = 'Alt';
-    }
+    return;
   }
-
-  toUpperCase() {
-    this.enLit = this.enLit.toUpperCase();
-    this.ruLit = this.ruLit.toUpperCase();
-  }
-
-  toLowerCase() {
-    this.enLit = this.enLit.toLowerCase();
-    this.ruLit = this.ruLit.toLowerCase();
-  }
-
-  setClassToButton() {
-    this.btn.className = 'btn';
-    if (this.enLit === 'Backspace' || this.enLit === 'Tab' || this.enLit === 'CapsLock' || this.enLit === 'Del'
-      || this.enLit === 'Enter' || this.enLit === 'ShiftLeft' || this.enLit === 'ShiftRight' || this.enLit === 'Whitespace') {
-      this.btn.classList.add('btn_long');
-    }
-  }
-
-  addClassToButton(newClass) {
-    this.btn.classList.add(newClass);
-  }
-
-  togglePressedClassToBtn() {
-    if (this.btn.classList.contains('btn_pressed')) {
-      this.btn.classList.remove('btn_pressed');
-    } else {
-      this.btn.classList.add('btn_pressed');
-    }
-  }
+  textArea.value += key;
+  textArea.setSelectionRange(textArea.value.length, textArea.value.length);
 }
 
 const enKeyRowKeys = Object.keys(enKeyRows);
@@ -131,12 +98,13 @@ for (let j = 0; j < enKeyRowKeys.length; j += 1) {
 
     btn.addEventListener('mouseup', () => {
       btn.classList.remove('btn_pressed');
+      changeTextArea(currentKey);
     });
 
     const keyObj = new Key(currentKey, '', btn);
     keyObj.setTextToButton();
     keyObj.setClassToButton();
-    if (i === enKeyRows[enKeyRowKeys[j]].length - 1 && (currentKey === 'Enter' || currentKey === 'Shift' || currentKey === 'Del')) {
+    if (i === enKeyRows[enKeyRowKeys[j]].length - 1 && (currentKey === 'Enter' || currentKey === 'ShiftRight' || currentKey === 'Del')) {
       keyObj.addClassToButton('btn_right-long');
     }
 
@@ -166,18 +134,26 @@ document.addEventListener('keydown', (e) => {
       keyboard[keys[i]].togglePressedClassToBtn();
     }
     if (e.code === 'ControlRight' && keyboard[keys[i]].enLit === 'ControlRight') {
+      e.preventDefault();
       keyboard[keys[i]].togglePressedClassToBtn();
     }
     if (e.code === 'ControlLeft' && keyboard[keys[i]].enLit === 'ControlLeft') {
+      e.preventDefault();
       keyboard[keys[i]].togglePressedClassToBtn();
     }
     if (e.code === 'AltLeft' && keyboard[keys[i]].enLit === 'AltLeft') {
+      e.preventDefault();
       keyboard[keys[i]].togglePressedClassToBtn();
     }
     if (e.code === 'AltRight' && keyboard[keys[i]].enLit === 'AltRight') {
+      e.preventDefault();
       keyboard[keys[i]].togglePressedClassToBtn();
     }
+    if (e.code === 'Tab' && keyboard[keys[i]].enLit === 'Tab') {
+      e.preventDefault();
+    }
   }
+  changeTextArea();
 });
 
 document.addEventListener('keyup', (e) => {
