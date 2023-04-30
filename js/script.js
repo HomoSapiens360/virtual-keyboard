@@ -8,6 +8,7 @@ const footer = document.createElement('footer');
 const footerPar = document.createElement('p');
 const keyboardWrap = document.createElement('div');
 const rowWrap = document.createElement('div');
+const keyboard = {};
 
 const EN_FIRST_ROW = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'];
 const RU_FIRST_ROW = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'];
@@ -23,7 +24,6 @@ class Key {
     this.btn = btn;
     this.enLit = enLit;
     this.ruLit = ruLit;
-
     btn.textContent = this.enLit;
   }
 
@@ -43,22 +43,31 @@ class Key {
       this.btn.classList.add('btn_long');
     }
   }
-  /*
-       createButton() {
-        const btn = document.createElement('button');
-        btn.
-      }
-      */
+
+  togglePressedClassToBtn() {
+    if (this.btn.classList.contains('btn_pressed')) {
+      this.btn.classList.remove('btn_pressed');
+    } else {
+      this.btn.classList.add('btn_pressed');
+    }
+  }
 }
 
 for (let i = 0; i < EN_FIRST_ROW.length; i += 1) {
-  const btn = document.createElement('button');
-  btn.addEventListener('click', () => {
-    btn.classList.toggle('btn_pressed');
+  const btn = document.createElement('div');
+  btn.addEventListener('mousedown', () => {
+    btn.classList.add('btn_pressed');
   });
+
+  btn.addEventListener('mouseup', () => {
+    btn.classList.remove('btn_pressed');
+  });
+
   const keyObj = new Key(EN_FIRST_ROW[i], '', btn);
   keyObj.setClassToButton();
   rowWrap.appendChild(keyObj.btn);
+
+  keyboard[keyObj.enLit] = keyObj;
 }
 
 header.className = 'header';
@@ -84,3 +93,21 @@ rowWrap.className = 'main__row-wrap';
 
 body.appendChild(header);
 body.appendChild(main);
+
+document.addEventListener('keydown', (e) => {
+  const keys = Object.keys(keyboard);
+  for (let i = 0; i < keys.length; i += 1) {
+    if (keyboard[keys[i]].enLit === e.key) {
+      keyboard[keys[i]].togglePressedClassToBtn();
+    }
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  const keys = Object.keys(keyboard);
+  for (let i = 0; i < keys.length; i += 1) {
+    if (keyboard[keys[i]].enLit === e.key) {
+      keyboard[keys[i]].togglePressedClassToBtn();
+    }
+  }
+});
