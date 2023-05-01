@@ -55,15 +55,22 @@ body.appendChild(footer);
 
 function changeTextArea(key = '') {
   textArea.focus();
+  const valLength = textArea.value.length;
+  if (key === 'Backspace' && valLength > 0) {
+    const oldVal = textArea.value;
+    textArea.value = oldVal.slice(0, valLength - 1);
+    textArea.setSelectionRange(textArea.value.length, textArea.value.length);
+    return;
+  }
   if (key === 'ArrowLeft') {
     if (acc === undefined) {
       acc = 1;
     }
-    const position = textArea.value.length - acc;
+    const position = valLength - acc;
     textArea.setSelectionRange(position, position);
     acc += 1;
-    if (acc === textArea.value.length) {
-      acc = textArea.value.length - 1;
+    if (acc === valLength) {
+      acc = valLength - 1;
     }
     return;
   }
@@ -71,7 +78,7 @@ function changeTextArea(key = '') {
     if (acc === undefined) {
       acc = 1;
     }
-    const position = textArea.value.length - acc;
+    const position = valLength - acc;
     textArea.setSelectionRange(position + 1, position + 1);
     acc -= 1;
     if (acc === 0) {
