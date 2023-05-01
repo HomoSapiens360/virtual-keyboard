@@ -11,10 +11,8 @@ const footerPar = document.createElement('p');
 const keyboardWrap = document.createElement('div');
 const keyboard = {};
 let acc;
-let isFocused = false;
 
 const EN_FIRST_ROW = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'];
-const RU_FIRST_ROW = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'];
 const EN_SECOND_ROW = ['Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 'Del'];
 const EN_THIRD_ROW = ['CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 'Enter'];
 const EN_FOURTH_ROW = ['ShiftLeft', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'ArrowUp', 'ShiftRight'];
