@@ -52,7 +52,6 @@ body.appendChild(main);
 body.appendChild(footer);
 
 function changeTextArea(key = '') {
-  textArea.focus();
   const valLength = textArea.value.length;
   if (key === 'Backspace' && valLength > 0) {
     const oldVal = textArea.value;
@@ -61,6 +60,7 @@ function changeTextArea(key = '') {
     return;
   }
   if (key === 'ArrowLeft') {
+    textArea.focus();
     if (acc === undefined) {
       acc = 1;
     }
@@ -73,6 +73,7 @@ function changeTextArea(key = '') {
     return;
   }
   if (key === 'ArrowRight') {
+    textArea.focus();
     if (acc === undefined) {
       acc = 1;
     }
@@ -158,6 +159,7 @@ document.addEventListener('keydown', (e) => {
       e.preventDefault();
     }
   }
+  textArea.focus();
   changeTextArea();
 });
 
